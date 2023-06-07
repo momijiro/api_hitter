@@ -1,8 +1,3 @@
-# My Python Library
-
-This is a Python library for hitting APIs.
-
-## Installation
-
-To install the library, run:
-
+# API Hitter
+For use API more convinient.
+I'm fixinig now.
