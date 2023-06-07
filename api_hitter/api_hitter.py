@@ -41,45 +41,47 @@ class ApiHitter:
 
     # Add more methods as required...
 
-def hit(self, cols, BT):
-    if self.type == 'twitter':
-        keyword = cols['keyword']
-        start_time = self.get_japan_time(cols['start_time'])
-        end_time = self.get_japan_time(cols['end_time'])
+    def hit(self, cols, BT):
+        if self.type == 'twitter':
+            keyword = cols['keyword']
+            start_time = self.get_japan_time(cols['start_time'])
+            end_time = self.get_japan_time(cols['end_time'])
 
-        count = 0
-        flag = True
-        df =  pd.DataFrame()
+            count = 0
+            flag = True
+            df =  pd.DataFrame()
 
-        # make_param
-        query_params = self.make_param(keyword, start_time, end_time)
-        print(f'start with keyword "{keyword}"')
+            # make_param
+            query_params = self.make_param(keyword, start_time, end_time)
+            print(f'start with keyword "{keyword}"')
 
-        flag = True
-        while flag:
-            headers = self.create_headers()
-            response = self.connect_to_endpoint(headers, query_params)
-            json_response = response.json()
+            flag = True
+            while flag:
+                headers = self.create_headers()
+                response = self.connect_to_endpoint(headers, query_params)
+                json_response = response.json()
 
-            df_tmp = self.json_to_df(json_response)
-            # concat df
-            df = pd.concat([df, df_tmp], ignore_index=True)
-            print("total:" + str(len(df)))
+                df_tmp = self.json_to_df(json_response)
+                # concat df
+                df = pd.concat([df, df_tmp], ignore_index=True)
+                print("total:" + str(len(df)))
 
-            # check next_token
-            if 'next_token' in json_response['meta']:
-                query_params['next_token'] = json_response['meta']['next_token']
-            else:
-                flag = False
+                # check next_token
+                if 'next_token' in json_response['meta']:
+                    query_params['next_token'] = json_response['meta']['next_token']
+                else:
+                    flag = False
 
-        df = self.adjust_created_at(df)
-        print(f'finish collecting {df.shape}')
-        return df
+            df = self.adjust_created_at(df)
+            print(f'finish collecting {df.shape}')
+            return df
 
-    elif self.type == 'diet':
-        self.input_validation()
-        Records, total_num = self.get_results()
-        self.write_csv(Records, total_num)
-    else:
-        raise ValueError(f"Unknown API type: {self.type}")
+        elif self.type == 'diet':
+            self.input_validation()
+            Records, total_num = self.get_results()
+            self.write_csv(Records, total_num)
+        else:
+            raise ValueError(f"Unknown API type: {self.type}")
+
+
 
