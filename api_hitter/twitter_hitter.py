@@ -4,7 +4,7 @@ import pandas as pd
 import datetime
 from pandas import json_normalize
 
-class ApiHitter:
+class TwitterHitter:
     def __init__(self):
         self.url = "https://api.twitter.com/2/tweets/search/all"
 
