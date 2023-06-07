@@ -1,4 +1,3 @@
-# api_hitter.py
 import requests
 import pandas as pd
 import datetime
@@ -32,10 +31,6 @@ class ApiHitter:
                         'next_token' : {} # param for next page
                         }
         return query_params
-
-    def create_headers(self):
-        headers = {"Authorization": "Bearer {}".format(self.BT)}
-        return headers
 
     def connect_to_endpoint(self, headers, params):
         response = requests.request("GET", self.url, headers=headers, params=params)
@@ -75,19 +70,18 @@ class ApiHitter:
         # Add more validations as required...
         return params
 
-    # Add more methods as required...
+    def get_results(self):
+        # Pseudo code to make this run without error
+        # You need to replace this with actual code to get results
+        return [], 0
 
-    def connect_to_endpoint(self, headers, params):
-        response = requests.request("GET", self.url, headers=headers, params=params)
-        if response.status_code != 200:
-            raise Exception(response.status_code, response.text)
-        return response
+    def write_csv(self, Records, total_num):
+        # Pseudo code to make this run without error
+        # You need to replace this with actual code to write csv
+        pass
 
-
-
-    def hit(self, cols, BT):
+    def hit(self, cols, BT=None):
         if self.type == 'twitter':
-
             keyword = cols['keyword']
             start_time = self.get_japan_time(cols['start_time'])
             end_time = self.get_japan_time(cols['end_time'])
@@ -102,8 +96,7 @@ class ApiHitter:
 
             flag = True
             while flag:
-                headers = self.create_headers()
-                response = self.connect_to_endpoint(headers, query_params)
+                response = self.connect_to_endpoint(self.headers, query_params)
                 json_response = response.json()
 
                 df_tmp = self.json_to_df(json_response)
@@ -122,11 +115,9 @@ class ApiHitter:
             return df
 
         elif self.type == 'diet':
-            self.input_validation()
             Records, total_num = self.get_results()
             self.write_csv(Records, total_num)
+            # As it is not clear what should be returned here, return an empty DataFrame for now
+            return pd.DataFrame()
         else:
             raise ValueError(f"Unknown API type: {self.type}")
-
-
-
